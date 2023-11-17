@@ -67,87 +67,73 @@ def start_break(shift_id: int, session: Session):
         # Retrieve the shift with the provided shift_id
         current_shift = session.query(Shift).filter(Shift.shift_id == shift_id).one()
 
-        # Check if the shift is currently working
-        if current_shift.status == "working":
-            # Calculate the time worked since the last status change
-            worked_time = datetime.utcnow() - current_shift.start_time
+        if current_shift.status != "working":
+            raise ValueError("Shift must be in 'working' state to start a break.")
 
-            # Update total_worked with the time worked
-            if current_shift.total_worked:
-                current_shift.total_worked += worked_time
-            else:
-                current_shift.total_worked = worked_time
+        # Record the break start time and update the status
+        current_shift.current_break_start = datetime.now()
+        current_shift.status = "on break"
+        session.commit()
 
-            # Set the status to 'on break'
-            current_shift.status = "on break"
-
-            # Commit the changes to the database
-            session.commit()
-        else:
-            print("The shift is not currently in 'working' status.")
     except NoResultFound:
-        # Handle the case where no shift is found with the given shift_id
-        print(f"No shift found with shift_id {shift_id}")
+        raise ValueError(f"No shift found with shift_id {shift_id}")
+    except ValueError as ve:
+        print(str(ve))
 
 
-def end_break(int, shift_id: int, session: Session):
+def end_break(shift_id: int, session: Session):
     """
-    Updates the shift with the provided shift_id for the user by setting the status to 'working'
-    and updating total_break with the time spent on break since the last status change.
+    Ends the break for the shift with the provided shift_id by calculating the break duration,
+    updating the total break duration, and setting the status back to 'working'.
     """
     try:
         # Retrieve the shift with the provided shift_id
-        current_shift = session.query(Shift).filter(Shift.shift_id == shift_id).one()
+        shift = session.query(Shift).filter(Shift.shift_id == shift_id).one()
 
-        # Check if the shift is currently on break
-        if current_shift.status == "on break":
-            # Calculate the break time
-            break_time = datetime.utcnow() - (
-                current_shift.start_time + current_shift.total_worked
-            )
+        if shift.status != "on break":
+            raise ValueError("Shift is not currently on break.")
 
-            # Update total_break with the break time
-            if current_shift.total_break:
-                current_shift.total_break += break_time
-            else:
-                current_shift.total_break = break_time
-
-            # Set the status to 'working'
-            current_shift.status = "working"
-
-            # Commit the changes to the database
-            session.commit()
-        else:
-            print("The shift is not currently in 'on break' status.")
-    except NoResultFound:
-        # Handle the case where no shift is found with the given shift_id
-        print(f"No shift found with shift_id {shift_id}")
-
-
-def end_shift(shift_id: int, session: Session):
-    """
-    Updates the current shift for the user by setting the status to 'not working', the end time to the current time,
-    and updates total_worked with the time worked since the last status change if the user is coming off a break.
-    """
-
-    current_shift = session.query(Shift).filter(Shift.shift_id == shift_id).one()
-
-    if current_shift:
-        current_shift.end_time = datetime.utcnow()
-        # If the user was on a break, we don't add to total_worked
-        if current_shift.status == "working":
-            worked_time = current_shift.end_time - (
-                current_shift.start_time + current_shift.total_worked
-            )
-            if current_shift.total_worked:
-                current_shift.total_worked += worked_time
-            else:
-                current_shift.total_worked = worked_time
-        current_shift.status = "not working"
+        # Calculate the break duration
+        break_duration = datetime.now() - shift.current_break_start
+        # Add the break duration to the total
+        shift.total_break_duration += break_duration
+        # Reset the current break start time and update the status
+        shift.current_break_start = None
+        shift.status = "working"
         session.commit()
 
-    else:
-        print(f"No shift found with shift_id {shift_id}")
+    except NoResultFound:
+        raise ValueError(f"No shift found with shift_id {shift_id}")
+    except ValueError as ve:
+        print(str(ve))
+
+
+def end_shift(session, shift_id):
+    try:
+        # Attempt to retrieve the shift instance by its ID
+        shift = session.query(Shift).filter_by(shift_id=shift_id).one()
+
+        # Check if the shift is currently "working"
+        if shift.status != "working":
+            raise Exception(f"Shift with ID {shift_id} is not in a 'working' status.")
+
+        # Get the current time
+        current_time = datetime.now()
+
+        # Calculate total worked time
+        total_worked = current_time - shift.start_time
+
+        # Update the shift instance
+        shift.end_time = current_time
+        shift.total_worked = total_worked
+        shift.status = "not working"
+
+        # Commit the changes to the database
+        session.commit()
+        print(f"Shift with ID {shift_id} has ended. Total worked time: {total_worked}.")
+
+    except NoResultFound:
+        print(f"No shift found with ID {shift_id}.")
 
 
 def resume_shift(shift_id: int, session: Session):

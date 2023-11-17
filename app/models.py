@@ -41,6 +41,7 @@ class Shift(Base):
     total_worked = Column(
         Interval
     )  # This can be calculated from start_time and end_time
+    current_break_start = Column(DateTime)
     total_break = Column(Interval)
     status = Column(String, default="not working")
 
