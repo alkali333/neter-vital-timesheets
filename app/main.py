@@ -32,7 +32,7 @@ st.header(formatted_date)
 # user not logged in
 if "user_id" not in st.session_state:
     email = st.sidebar.text_input("Email", value="jake@alkalimedia.co.uk")
-    password = st.sidebar.text_input("Password", type="password", value="Love+Code108")
+    password = st.sidebar.text_input("Password", type="password")
 
     if st.sidebar.button("Login"):
         with SessionLocal() as session:
