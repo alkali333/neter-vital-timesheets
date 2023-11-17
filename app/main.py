@@ -73,7 +73,7 @@ else:
             if st.button(label="Start My Shift", use_container_width=True):
                 with SessionLocal() as session:
                     start_shift(user_id=st.session_state.user_id, session=session)
-                    st.experimental_rerun()
+                    st.rerun()
 
 
 # What happens to an ended shift? Do I need a function to resume it?
