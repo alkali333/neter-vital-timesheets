@@ -10,16 +10,6 @@ def format_timedelta(td):
     return f"{int(hours)} hours {int(minutes)} minutes"
 
 
-def calculate_hours_worked(start_time):
-    # Get the current time
-    current_time = datetime.now()
-
-    # Calculate the time delta between now and the start time
-    time_worked = current_time - start_time
-
-    return time_worked
-
-
 # Example usage:
 td = timedelta(hours=2, minutes=10, seconds=57, microseconds=433451)
 formatted = format_timedelta(td)

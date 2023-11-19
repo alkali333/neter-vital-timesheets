@@ -2,8 +2,9 @@ import streamlit as st
 from datetime import datetime, timezone
 import os
 from dotenv import find_dotenv
+from streamlit_autorefresh import st_autorefresh
 
-from utils import format_timedelta, calculate_hours_worked
+from utils import format_timedelta
 from models import User, Shift, SessionLocal
 from db_functions import (
     authenticate,
@@ -27,6 +28,11 @@ st.set_page_config(
 )
 
 
+# Set up an auto-refresh interval of 30 seconds
+refresh_interval_ms = 30 * 1000  # Convert seconds to milliseconds
+st_autorefresh(interval=refresh_interval_ms, key="data_refresh")
+
+
 st.title("Neter Vital Timesheet")
 # Get the current date and time in UTC
 current_utc_datetime = datetime.now(timezone.utc)
@@ -37,30 +43,38 @@ formatted_date = current_utc_datetime.strftime("%Y-%m-%d %H:%M:%S")
 st.header(formatted_date)
 
 
-# user not logged in
-if "user_id" not in st.session_state:
-    email = st.sidebar.text_input("Email", value="jake@alkalimedia.co.uk")
-    password = st.sidebar.text_input(
-        "Password", type="password", value=os.getenv("DEBUGGING_PASSWORD")
-    )
+# Callback function for handling login
+def handle_login(email, password):
+    with SessionLocal() as session:
+        authenticated = authenticate(session, User, email, password)
 
-    if st.sidebar.button("Login"):
+    if authenticated:
         with SessionLocal() as session:
-            authenticated = authenticate(session, User, email, password)
+            user_in_db = session.query(User).filter_by(email=email).first()
 
-        if authenticated:
-            with SessionLocal() as session:
-                user_in_db = session.query(User).filter_by(email=email).first()
+        st.session_state.user_id = user_in_db.user_id
+        st.session_state.user_name = user_in_db.name
+        st.rerun()
+    else:
+        st.sidebar.error("The login details are incorrect")
 
-                st.session_state.user_id = user_in_db.user_id
-                # store user name
-                st.session_state.user_name = user_in_db.name
-        else:
-            st.sidebar.write("The login details are incorrect")
+
+# Check if the user is not logged in
+if "user_id" not in st.session_state:
+    # Use a form for the login inputs and button
+    with st.sidebar.form(key="login_form"):
+        email = st.text_input("Email", value="jake@alkalimedia.co.uk")
+        password = st.text_input(
+            "Password", type="password", value=os.getenv("DEBUGGING_PASSWORD")
+        )
+
+        # Create a form and use the 'on_click' parameter to specify the callback function
+        if st.form_submit_button(label="Login"):
+            handle_login(email, password)
+
 
 else:
     st.write(f"Welcome {st.session_state.user_name}")
-
     with SessionLocal() as session:
         user_shift_today = find_shift_for_user_today(
             user_id=st.session_state.user_id, session=session
@@ -71,16 +85,14 @@ else:
 
             st.write(f"Status: {user_shift_today.status}")
 
-            # if they are not currently working, get the total from the db
-            if user_shift_today == "not working":
-                hours_worked = user_shift_today.total_worked
-            # if they are working, use the current time
-            else:
-                hours_worked = calculate_hours_worked(user_shift_today.start_time)
+            # if they are not currently working, get the total time for the current shift from the databse
+            # It will be None if they have not started
 
-            st.write(f"Time worked today: {format_timedelta(hours_worked)}")
             st.write(
-                f"Break taken today: {format_timedelta(user_shift_today.total_break)}"
+                f"Time worked today: {format_timedelta(user_shift_today.total_hours_worked) or 'None'}"
+            )
+            st.write(
+                f"Break taken today: {format_timedelta(user_shift_today.total_hours_worked) or 'None'}"
             )
             if user_shift_today.status == "working":
                 if st.button(label="Start My Break", use_container_width=True):

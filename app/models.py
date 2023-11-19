@@ -10,10 +10,13 @@ from sqlalchemy import (
     Interval,
     CheckConstraint,
 )
+
+from sqlalchemy import func, case
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-
-from dotenv import load_dotenv, find_dotenv
+from sqlalchemy.ext.hybrid import hybrid_property
+from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -38,9 +41,6 @@ class Shift(Base):
     date = Column(Date)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    total_worked = Column(
-        Interval
-    )  # This can be calculated from start_time and end_time
     current_break_start = Column(DateTime)
     total_break = Column(Interval)
     status = Column(String, default="not working")
@@ -53,6 +53,33 @@ class Shift(Base):
         ),
     )
 
+    @hybrid_property
+    def total_time_worked(self):
+        if self.status in ["working", "on break"]:
+            current_time = datetime.utcnow()
+            return current_time - self.start_time
+        elif self.status == "not working":
+            return (
+                self.end_time - self.start_time
+                if self.start_time and self.end_time
+                else None
+            )
+        return None
+
+    @total_time_worked.expression
+    def total_time_worked(cls):
+        current_time_utc = func.timezone("UTC", func.current_timestamp())
+        return case(
+            [
+                (
+                    cls.status.in_(["working", "on break"]),
+                    current_time_utc - cls.start_time,
+                ),
+                (cls.status == "not working", cls.end_time - cls.start_time),
+            ],
+            else_=None,
+        )
+
     # Relationship to the users table
     user = relationship("User", back_populates="shifts")
 
@@ -63,7 +90,7 @@ else:
     SQLALCHEMY_DATABASE_URL = f'postgresql://{os.getenv("DATABASE_USERNAME")}:{os.getenv("DATABASE_PASSWORD")}@{os.getenv("DATABASE_HOSTNAME")}:{os.getenv("DATABASE_PORT")}/{os.getenv("DATABASE_NAME")}'
 
 # debugging
-print(f"Database URL: {SQLALCHEMY_DATABASE_URL}")
+# print(f"Database URL: {SQLALCHEMY_DATABASE_URL}")
 
 # Setup the database connection
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

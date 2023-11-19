@@ -120,12 +120,8 @@ def end_shift(session, shift_id):
         # Get the current time
         current_time = datetime.now()
 
-        # Calculate total worked time
-        total_worked = current_time - shift.start_time
-
         # Update the shift instance
         shift.end_time = current_time
-        shift.total_worked = total_worked
         shift.status = "not working"
 
         # Commit the changes to the database
