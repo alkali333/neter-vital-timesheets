@@ -48,6 +48,11 @@ def start_shift(user_id: int, session: Session):
     """
     Creates a new shift entry for the user with the current time as the start time and sets the status to 'working'.
     """
+    if find_shift_for_user_today(user_id=user_id, session=session):
+        raise ValueError(
+            f"Cannot create shift: shift already exists for user: {user_id} on {datetime.utcnow().date()} "
+        )
+
     new_shift = Shift(
         user_id=user_id,
         date=datetime.utcnow().date(),
@@ -126,7 +131,9 @@ def end_shift(session, shift_id):
 
         # Commit the changes to the database
         session.commit()
-        print(f"Shift with ID {shift_id} has ended. Total worked time: {total_worked}.")
+        print(
+            f"Shift with ID {shift_id} has ended. Total worked time: {shift.total_time_worked}."
+        )
 
     except NoResultFound:
         print(f"No shift found with ID {shift_id}.")

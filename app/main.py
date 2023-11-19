@@ -37,16 +37,16 @@ def logout():
 
 
 # Set up an auto-refresh interval of 30 seconds
+# This is to keep the work hours updated for working users
 refresh_interval_ms = 30 * 1000  # Convert seconds to milliseconds
 st_autorefresh(interval=refresh_interval_ms, key="data_refresh")
 
 
-st.title("Neter Vital Timesheet")
+st.sidebar.image("./images/logo.png", width=222)
 # Get the current date and time in UTC
 current_utc_datetime = datetime.now(timezone.utc)
 
-# Format the date and time in a nice format, for example: 'YYYY-MM-DD HH:MM:SS'
-formatted_date = current_utc_datetime.strftime("%Y-%m-%d %H:%M:%S")
+formatted_date = current_utc_datetime.strftime("%d %B %Y")
 
 st.header(formatted_date)
 
@@ -82,8 +82,9 @@ if not st.session_state.user_id:
 
 
 else:
-    st.write(f"Welcome {st.session_state.user_name}")
+    st.sidebar.write(f"Welcome {st.session_state.user_name}")
     with SessionLocal() as session:
+        # check if there is already a shift today
         user_shift_today = find_shift_for_user_today(
             user_id=st.session_state.user_id, session=session
         )
@@ -93,14 +94,11 @@ else:
 
             st.write(f"Status: {user_shift_today.status}")
 
-            # if they are not currently working, get the total time for the current shift from the databse
-            # It will be None if they have not started
-
             st.write(
-                f"Time worked today: {format_timedelta(user_shift_today.total_hours_worked) or 'None'}"
+                f"Time worked today: {format_timedelta(user_shift_today.total_time_worked) or 'None'}"
             )
             st.write(
-                f"Break taken today: {format_timedelta(user_shift_today.total_hours_worked) or 'None'}"
+                f"Break taken today: {format_timedelta(user_shift_today.total_break) or 'None'}"
             )
             if user_shift_today.status == "working":
                 if st.button(label="Start My Break", use_container_width=True):
@@ -131,6 +129,5 @@ else:
                     start_shift(user_id=st.session_state.user_id, session=session)
                     st.rerun()
 
-    st.write("-" * 77 + "\n\n")
-    st.button(label="Log Out", on_click=logout)
+    st.sidebar.button(label="Log Out", on_click=logout)
 # What happens to an ended shift? Do I need a function to resume it?
