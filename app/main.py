@@ -27,6 +27,14 @@ st.set_page_config(
     menu_items=None,
 )
 
+if "user_id" not in st.session_state:
+    st.session_state.user_id = None
+
+
+# callback function so no need for re-run
+def logout():
+    st.session_state.user_id = None
+
 
 # Set up an auto-refresh interval of 30 seconds
 refresh_interval_ms = 30 * 1000  # Convert seconds to milliseconds
@@ -60,7 +68,7 @@ def handle_login(email, password):
 
 
 # Check if the user is not logged in
-if "user_id" not in st.session_state:
+if not st.session_state.user_id:
     # Use a form for the login inputs and button
     with st.sidebar.form(key="login_form"):
         email = st.text_input("Email", value="jake@alkalimedia.co.uk")
@@ -123,5 +131,6 @@ else:
                     start_shift(user_id=st.session_state.user_id, session=session)
                     st.rerun()
 
-
+    st.write("-" * 77 + "\n\n")
+    st.button(label="Log Out", on_click=logout)
 # What happens to an ended shift? Do I need a function to resume it?
