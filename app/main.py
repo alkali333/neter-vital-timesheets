@@ -83,6 +83,7 @@ if not st.session_state.user_id:
 
 else:
     st.sidebar.write(f"Welcome {st.session_state.user_name}")
+    st.sidebar.button(label="Log Out", on_click=logout)
     with SessionLocal() as session:
         # check if there is already a shift today
         user_shift_today = find_shift_for_user_today(
@@ -129,5 +130,5 @@ else:
                     start_shift(user_id=st.session_state.user_id, session=session)
                     st.rerun()
 
-    st.sidebar.button(label="Log Out", on_click=logout)
+
 # What happens to an ended shift? Do I need a function to resume it?
