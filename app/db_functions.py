@@ -133,9 +133,6 @@ def end_shift(session, shift_id):
 
         # Commit the changes to the database
         session.commit()
-        print(
-            f"Shift with ID {shift_id} has ended. Total worked time: {shift.total_time_worked}."
-        )
 
     except NoResultFound:
         print(f"No shift found with ID {shift_id}.")
