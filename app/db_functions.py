@@ -65,8 +65,7 @@ def start_shift(user_id: int, session: Session):
 
 def start_break(shift_id: int, session: Session):
     """
-    Updates the shift with the provided shift_id for the user by setting the status to 'on break'
-    and updating total_worked with the time worked since the last status change.
+    Sets the break to start at the current time, and updates the status to 'on break'
     """
     try:
         # Retrieve the shift with the provided shift_id
@@ -100,8 +99,11 @@ def end_break(shift_id: int, session: Session):
 
         # Calculate the break duration
         break_duration = datetime.now() - shift.current_break_start
+        # If total_break is None, initialize it as 0 timedelta
+        if shift.total_break is None:
+            shift.total_break = timedelta(0)
         # Add the break duration to the total
-        shift.total_break_duration += break_duration
+        shift.total_break += break_duration
         # Reset the current break start time and update the status
         shift.current_break_start = None
         shift.status = "working"

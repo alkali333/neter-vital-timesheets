@@ -16,7 +16,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.hybrid import hybrid_property
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -79,6 +79,24 @@ class Shift(Base):
             ],
             else_=None,
         )
+
+    @hybrid_property
+    def current_break_duration(self):
+        if self.status == "on break" and self.current_break_start is not None:
+            current_time = datetime.utcnow()
+            return current_time - self.current_break_start
+        return None
+
+    @hybrid_property
+    def payable_hours(self):
+        if self.total_time_worked is None:
+            return None
+        else:
+            # If total_break_duration is None, it will default to a timedelta of 0
+            total_break_duration = (
+                self.total_break if self.total_break is not None else timedelta(0)
+            )
+            return self.total_time_worked - total_break_duration
 
     # Relationship to the users table
     user = relationship("User", back_populates="shifts")
