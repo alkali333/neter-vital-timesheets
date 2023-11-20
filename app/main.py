@@ -128,10 +128,20 @@ else:
                             session=session,
                         )
                         st.rerun()
+                confirm_end_shift = st.checkbox(
+                    "Confirm you want to end your shift and submit your hours for today."
+                )
                 if st.button(label="End My Shift", use_container_width=True):
-                    with SessionLocal() as session:
-                        end_shift(shift_id=st.session_state.shift_id, session=session)
-                        st.rerun()
+                    if confirm_end_shift:
+                        with SessionLocal() as session:
+                            end_shift(
+                                shift_id=st.session_state.shift_id, session=session
+                            )
+                            st.rerun()
+                    else:
+                        st.warning(
+                            "Please confirm you want to end your shift by ticking the checkbox"
+                        )
             elif user_shift_today.status == "on break":
                 if st.button(label="End My Break", use_container_width=True):
                     with SessionLocal() as session:
@@ -142,9 +152,9 @@ else:
                 st.write(
                     f"Total payable time:{format_timedelta(user_shift_today.payable_hours)}"
                 )
-                if st.button(label="Resume my shift", use_container_width=True):
-                    resume_shift(shift_id=st.session_state.shift_id, session=session)
-                    st.rerun()
+                # if st.button(label="Resume my shift", use_container_width=True):
+                #     resume_shift(shift_id=st.session_state.shift_id, session=session)
+                #     st.rerun()
 
         else:
             status_placeholder.write("Your shift has not yet started")
