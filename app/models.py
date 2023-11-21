@@ -25,9 +25,9 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = "user"
-    user_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
-    email = Column(String(length=320), nullable=False)
+    email = Column(String(length=320), nullable=False, index=True)
     password = Column(String, nullable=False)
 
     # Relationship to the shifts table

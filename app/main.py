@@ -128,6 +128,7 @@ else:
                             session=session,
                         )
                         st.rerun()
+                st.write("\n\n\n\n")
                 confirm_end_shift = st.checkbox(
                     "Confirm you want to end your shift and submit your hours for today."
                 )
