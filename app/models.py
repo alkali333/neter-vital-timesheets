@@ -58,27 +58,13 @@ class Shift(Base):
         if self.status in ["working", "on break"]:
             current_time = datetime.utcnow()
             return current_time - self.start_time
-        elif self.status == "not working":
+        elif self.status == "finished working":
             return (
                 self.end_time - self.start_time
                 if self.start_time and self.end_time
                 else None
             )
         return None
-
-    @total_time_worked.expression
-    def total_time_worked(cls):
-        current_time_utc = func.timezone("UTC", func.current_timestamp())
-        return case(
-            [
-                (
-                    cls.status.in_(["working", "on break"]),
-                    current_time_utc - cls.start_time,
-                ),
-                (cls.status == "not working", cls.end_time - cls.start_time),
-            ],
-            else_=None,
-        )
 
     @hybrid_property
     def current_break_duration(self):
