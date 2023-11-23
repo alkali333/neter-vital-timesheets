@@ -10,10 +10,10 @@ st.title("Shifts Admin Screen")
 
 # Initialize session state variables if they don't exist
 if "selected_user_id" not in st.session_state:
-    st.session_state["selected_user_id"] = None
+    st.session_state.selected_user_id = None
 
 if "selected_shift_id" not in st.session_state:
-    st.session_state["selected_shift_id"] = None
+    st.session_state.selected_shift_id = None
 
 # Dropdown to select a user
 with SessionLocal() as session:
@@ -27,21 +27,19 @@ selected_user_id = st.selectbox(
 
 # Button to confirm user selection and store it in session state
 if st.button("Confirm User"):
-    st.session_state["selected_user_id"] = selected_user_id
-    st.session_state["selected_shift_id"] = None  # Reset shift selection
+    st.session_state.selected_user_id = selected_user_id
+    st.session_state.selected_shift_id = None  # Reset shift selection
 
 # Display the selected user
 if st.session_state["selected_user_id"]:
-    st.write(
-        f"User selected: {user_id_name_dict[st.session_state['selected_user_id']]}"
-    )
+    st.write(f"User selected: {user_id_name_dict[st.session_state.selected_user_id]}")
 
 # Dropdown to select a shift after a user has been selected
-if st.session_state["selected_user_id"]:
+if st.session_state.selected_user_id:
     with SessionLocal() as session:
         recent_shifts = (
             session.query(Shift)
-            .filter(Shift.user_id == st.session_state["selected_user_id"])
+            .filter(Shift.user_id == st.session_state.selected_user_id)
             .order_by(Shift.date.desc(), Shift.start_time.desc())
             .limit(7)  # show the most recent 7 shifts
             .all()
@@ -52,21 +50,25 @@ if st.session_state["selected_user_id"]:
         options=[None] + list(shift_id_date_dict.keys()),
         format_func=lambda x: "Select a shift"
         if x is None
-        else shift_id_date_dict[x].strftime("%Y-%m-%d %H:%M"),
+        else shift_id_date_dict[x].strftime("%Y-%m-%d"),
     )
 
     # Button to confirm shift selection and store it in session state
     if st.button("Confirm Shift"):
-        st.session_state["selected_shift_id"] = selected_shift_id
+        st.session_state.selected_shift_id = selected_shift_id
 
 # Form to edit the selected shift
-if st.session_state["selected_shift_id"]:
+if st.session_state.selected_shift_id:
     with SessionLocal() as session:
-        shift_to_edit = session.query(Shift).get(st.session_state["selected_shift_id"])
+        shift_to_edit = session.query(Shift).get(st.session_state.selected_shift_id)
         with st.form(f"shift_{shift_to_edit.shift_id}"):
-            date = st.date_input("Date", shift_to_edit.date)
-            start_time = st.time_input("Start Time", shift_to_edit.start_time)
-            end_time = st.time_input("End Time", shift_to_edit.end_time)
+            date = st.date_input("Date", shift_to_edit.date, disabled=True)
+            start_time = st.time_input(
+                "Start Time", value=shift_to_edit.start_time, step=timedelta(minutes=1)
+            )
+            end_time = st.time_input(
+                "End Time", shift_to_edit.end_time, step=timedelta(minutes=1)
+            )
 
             # Create two columns for the total break hours and minutes inputs
             col1, col2 = st.columns(2)
@@ -86,11 +88,6 @@ if st.session_state["selected_shift_id"]:
                     step=1,
                 )
 
-            # Convert the input hours and minutes to a timedelta
-            total_break = timedelta(
-                hours=total_break_hours, minutes=total_break_minutes
-            )
-
             status = st.selectbox(
                 "Status",
                 ("working", "on break", "not working"),
@@ -104,16 +101,18 @@ if st.session_state["selected_shift_id"]:
                 timezone_utc = timezone(timedelta(hours=0))
 
                 # Combine date and time to create datetime objects with timezone information
-                start_datetime = datetime.combine(date, start_time).replace(
-                    tzinfo=timezone_utc
-                )
-                end_datetime = datetime.combine(date, end_time).replace(
-                    tzinfo=timezone_utc
+                start_datetime = datetime.combine(date, start_time)
+                end_datetime = datetime.combine(date, end_time)
+
+                # Convert the break input hours and minutes to a timedelta
+                # this will work with Interval in the model
+                total_break = timedelta(
+                    hours=total_break_hours, minutes=total_break_minutes
                 )
 
-                shift_to_edit.date = date
-                shift_to_edit.start_time = start_time
-                shift_to_edit.end_time = end_time
+                # shift_to_edit.date = date
+                shift_to_edit.start_time = start_datetime
+                shift_to_edit.end_time = end_datetime
                 shift_to_edit.total_break = total_break
                 shift_to_edit.status = status
                 session.commit()
