@@ -1,0 +1,1 @@
+status::text = ANY (ARRAY['working'::character varying, 'on break'::character varying, 'not working'::character varying, , 'finished working'::character varying]::text[])

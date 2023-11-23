@@ -33,6 +33,25 @@ if st.button("Confirm User"):
 # Display the selected user
 if st.session_state["selected_user_id"]:
     st.write(f"User selected: {user_id_name_dict[st.session_state.selected_user_id]}")
+    if st.session_state.selected_shift_id is None:
+        with st.form("new_shift_form"):
+            # We use date_input to allow the admin to select a date for the new shift
+            new_shift_date = st.date_input("New Shift Date")
+            create_shift_button = st.form_submit_button("Create New Shift")
+
+        if create_shift_button:
+            with SessionLocal() as session:
+                new_shift = Shift(
+                    user_id=st.session_state.selected_user_id,
+                    date=new_shift_date,
+                    status="working",
+                    # Add other fields as necessary, e.g. start_time, end_time, total_break
+                )
+                session.add(new_shift)
+                session.commit()
+                st.success(
+                    f"Shift on {new_shift_date} created successfully for user {user_id_name_dict[st.session_state.selected_user_id]}"
+                )
 
 # Dropdown to select a shift after a user has been selected
 if st.session_state.selected_user_id:
@@ -46,16 +65,17 @@ if st.session_state.selected_user_id:
         )
     shift_id_date_dict = {shift.shift_id: shift.date for shift in recent_shifts}
     selected_shift_id = st.selectbox(
-        "Select a shift",
+        "Edit existing shift",
         options=[None] + list(shift_id_date_dict.keys()),
-        format_func=lambda x: "Select a shift"
+        format_func=lambda x: "Select shift"
         if x is None
         else shift_id_date_dict[x].strftime("%Y-%m-%d"),
     )
 
     # Button to confirm shift selection and store it in session state
-    if st.button("Confirm Shift"):
+    if st.button("Edit Shift"):
         st.session_state.selected_shift_id = selected_shift_id
+        st.rerun()
 
 # Form to edit the selected shift
 if st.session_state.selected_shift_id:
@@ -90,8 +110,8 @@ if st.session_state.selected_shift_id:
 
             status = st.selectbox(
                 "Status",
-                ("working", "on break", "not working"),
-                index=("working", "on break", "not working").index(
+                ("working", "on break", "finished working"),
+                index=("working", "on break", "finished working").index(
                     shift_to_edit.status
                 ),
             )
@@ -117,3 +137,8 @@ if st.session_state.selected_shift_id:
                 shift_to_edit.status = status
                 session.commit()
                 st.success("Shift updated successfully!")
+
+session_state_str = " | ".join(
+    [f"{key}: {value}" for key, value in st.session_state.items()]
+)
+st.write(session_state_str)

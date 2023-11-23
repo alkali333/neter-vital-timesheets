@@ -48,7 +48,7 @@ class Shift(Base):
     # Add a constraint to limit the values
     __table_args__ = (
         CheckConstraint(
-            status.in_(("working", "on break", "not working")),
+            status.in_(("working", "on break", "not working", "finished working")),
             name="check_valid_status",
         ),
     )

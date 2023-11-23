@@ -129,39 +129,10 @@ def end_shift(session, shift_id):
 
         # Update the shift instance
         shift.end_time = current_time
-        shift.status = "not working"
+        shift.status = "finished working"
 
         # Commit the changes to the database
         session.commit()
 
     except NoResultFound:
         print(f"No shift found with ID {shift_id}.")
-
-
-def resume_shift(shift_id: int, session: Session):
-    """
-    Allows a worker to resume a shift if it was ended prematurely by using the shift_id.
-    """
-    try:
-        # Retrieve the shift with the provided shift_id
-        current_shift = session.query(Shift).filter(Shift.shift_id == shift_id).one()
-
-        # Check if the shift is marked as 'not working' and the end time is today
-        if (
-            current_shift.status == "not working"
-            and current_shift.end_time
-            and current_shift.end_time.date() == datetime.utcnow().date()
-        ):
-            # Reset end_time to None and change status back to 'working'
-            current_shift.end_time = None
-            current_shift.status = "working"
-            session.commit()
-            return True
-        else:
-            # If the shift is not marked as 'not working' or the end time is not today, it cannot be resumed
-            print(f"The shift with shift_id {shift_id} cannot be resumed.")
-    except NoResultFound:
-        # Handle the case where no shift is found with the given shift_id
-        print(f"No shift found with shift_id {shift_id}")
-
-    return False

@@ -4,7 +4,7 @@ import os
 from dotenv import find_dotenv
 from streamlit_autorefresh import st_autorefresh
 
-from utils import format_timedelta
+from utils import format_timedelta, print_session_state
 from models import User, Shift, SessionLocal
 from db_functions import (
     authenticate,
@@ -13,7 +13,6 @@ from db_functions import (
     start_break,
     end_break,
     end_shift,
-    resume_shift,
 )
 
 find_dotenv()
@@ -31,32 +30,13 @@ st.set_page_config(
 if "user_id" not in st.session_state:
     st.session_state.user_id = None
 
-
-if "status" not in st.session_state:
-    st.session_state.status = "Not started working today"
-
 if "is_admin" not in st.session_state:
     st.session_state.is_admin = False
-
-if "admin_type" not in st.session_state:
-    st.session_state.admin_type = None
-
-
-def go_back():
-    st.caching.clear_cache()
-    st.session_state.admin_type = None
 
 
 # callback function so no need for re-run
 def logout():
     st.session_state.user_id = None
-
-
-def print_session_state():
-    session_state_str = " | ".join(
-        [f"{key}: {value}" for key, value in st.session_state.items()]
-    )
-    st.write(session_state_str)
 
 
 # Set up an auto-refresh interval of 30 seconds
@@ -76,7 +56,6 @@ st.header(formatted_date)
 
 # Callback function for handling login
 def handle_login(email, password):
-    st.caching.clear_cache()
     with SessionLocal() as session:
         authenticated = authenticate(session, User, email, password)
 
@@ -116,98 +95,74 @@ else:
     status_placeholder = st.sidebar.empty()
     st.sidebar.button(label="Log Out", on_click=logout)
 
-    # For ordinary users
-    if not st.session_state.is_admin:
-        with SessionLocal() as session:
-            # check if there is already a shift today
-            user_shift_today = find_shift_for_user_today(
-                user_id=st.session_state.user_id, session=session
+    with SessionLocal() as session:
+        # check if there is already a shift today
+        user_shift_today = find_shift_for_user_today(
+            user_id=st.session_state.user_id, session=session
+        )
+        if user_shift_today:
+            # store the shift ID in a session variable
+            st.session_state.shift_id = user_shift_today.shift_id
+
+            status_placeholder.write(f"Status: {user_shift_today.status}")
+
+            st.write(
+                f"Time worked today: {format_timedelta(user_shift_today.total_time_worked) or 'None'}"
             )
-            if user_shift_today:
-                # store the shift ID in a session variable
-                st.session_state.shift_id = user_shift_today.shift_id
 
-                status_placeholder.write(f"Status: {user_shift_today.status}")
-
+            # show total break or current break duration depending on if user is on break
+            if user_shift_today.status == "on break":
                 st.write(
-                    f"Time worked today: {format_timedelta(user_shift_today.total_time_worked) or 'None'}"
+                    f"Current break duration: {format_timedelta(user_shift_today.current_break_duration)}"
+                )
+            else:
+                st.write(
+                    f"Break taken today: {format_timedelta(user_shift_today.total_break) or 'None'}"
                 )
 
-                # show total break or current break duration depending on if user is on break
-                if user_shift_today.status == "on break":
-                    st.write(
-                        f"Current break duration: {format_timedelta(user_shift_today.current_break_duration)}"
-                    )
-                else:
-                    st.write(
-                        f"Break taken today: {format_timedelta(user_shift_today.total_break) or 'None'}"
-                    )
-
-                if user_shift_today.status == "working":
-                    if st.button(label="Start My Break", use_container_width=True):
+            if user_shift_today.status == "working":
+                if st.button(label="Start My Break", use_container_width=True):
+                    with SessionLocal() as session:
+                        start_break(
+                            shift_id=st.session_state.shift_id,
+                            session=session,
+                        )
+                        st.rerun()
+                st.write("\n\n\n\n")
+                confirm_end_shift = st.checkbox(
+                    "Confirm you want to end your shift and submit your hours for today."
+                )
+                if st.button(label="End My Shift", use_container_width=True):
+                    if confirm_end_shift:
                         with SessionLocal() as session:
-                            start_break(
-                                shift_id=st.session_state.shift_id,
-                                session=session,
-                            )
-                            st.rerun()
-                    st.write("\n\n\n\n")
-                    confirm_end_shift = st.checkbox(
-                        "Confirm you want to end your shift and submit your hours for today."
-                    )
-                    if st.button(label="End My Shift", use_container_width=True):
-                        if confirm_end_shift:
-                            with SessionLocal() as session:
-                                end_shift(
-                                    shift_id=st.session_state.shift_id, session=session
-                                )
-                                st.rerun()
-                        else:
-                            st.warning(
-                                "Please confirm you want to end your shift by ticking the checkbox"
-                            )
-                elif user_shift_today.status == "on break":
-                    if st.button(label="End My Break", use_container_width=True):
-                        with SessionLocal() as session:
-                            end_break(
+                            end_shift(
                                 shift_id=st.session_state.shift_id, session=session
                             )
                             st.rerun()
-                elif user_shift_today.status == "not working":
-                    st.write("You have finished your shift today")
-                    st.write(
-                        f"Total payable time:{format_timedelta(user_shift_today.payable_hours)}"
-                    )
-                    # if st.button(label="Resume my shift", use_container_width=True):
-                    #     resume_shift(shift_id=st.session_state.shift_id, session=session)
-                    #     st.rerun()
-
-            else:
-                status_placeholder.write("Your shift has not yet started")
-                if st.button(label="Start My Shift", use_container_width=True):
+                    else:
+                        st.warning(
+                            "Please confirm you want to end your shift by ticking the checkbox"
+                        )
+            elif user_shift_today.status == "on break":
+                if st.button(label="End My Break", use_container_width=True):
                     with SessionLocal() as session:
-                        start_shift(user_id=st.session_state.user_id, session=session)
+                        end_break(shift_id=st.session_state.shift_id, session=session)
                         st.rerun()
-    else:
-        st.write("Welcome To Admin Mode")
-        # Show buttons to choose admin type
-        if not st.session_state.admin_type:
-            if st.button("View Reports"):
-                st.caching.clear_cache()
-                st.session_state.admin_type = "Report"
-                st.rerun()
-            if st.button("Manual Edit"):
-                st.caching.clear_cache()
-                st.session_state.admin_type = "Edit"
-                st.rerun()
+            elif user_shift_today.status == "not working":
+                st.write("You have finished your shift today")
+                st.write(
+                    f"Total payable time:{format_timedelta(user_shift_today.payable_hours)}"
+                )
+                # if st.button(label="Resume my shift", use_container_width=True):
+                #     resume_shift(shift_id=st.session_state.shift_id, session=session)
+                #     st.rerun()
 
-        if st.session_state.admin_type == "Report":
-            st.title("View Reports")
-            st.button("Back", on_click=go_back)
-        elif st.session_state.admin_type == "Edit":
-            st.title("Manual Edit")
-            st.button("Back", on_click=go_back)
+        else:
+            status_placeholder.write("Your shift has not yet started")
+            if st.button(label="Start My Shift", use_container_width=True):
+                with SessionLocal() as session:
+                    start_shift(user_id=st.session_state.user_id, session=session)
+                    st.rerun()
 
-st.write("\n\n\n\n\n\n")
-st.write("debugging info for Jake")
+
 print_session_state()

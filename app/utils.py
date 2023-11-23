@@ -1,4 +1,5 @@
-from datetime import timedelta, datetime, time
+from datetime import timedelta, time
+import streamlit as st
 
 
 def format_timedelta(td):
@@ -20,3 +21,12 @@ def timedelta_to_time(td):
 # Function to convert datetime.time to timedelta
 def time_to_timedelta(t):
     return timedelta(hours=t.hour, minutes=t.minute)
+
+
+def print_session_state():
+    st.write("\n\n\n\n\n\n")
+    st.write("debugging info:")
+    session_state_str = " | ".join(
+        [f"{key}: {value}" for key, value in st.session_state.items()]
+    )
+    st.write(session_state_str)
