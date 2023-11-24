@@ -8,7 +8,7 @@ def format_timedelta(td):
     total_minutes = td.total_seconds() // 60
     hours = total_minutes // 60
     minutes = total_minutes % 60
-    return f"{int(hours)} hours {int(minutes)} minutes"
+    return f"{int(hours)}:{int(minutes)}"
 
 
 def timedelta_to_time(td):
@@ -16,6 +16,17 @@ def timedelta_to_time(td):
     hours, remainder = divmod(seconds, 3600)
     minutes, _ = divmod(remainder, 60)
     return time(hours, minutes)
+
+
+def timedelta_to_time_string(td):
+    seconds = td.seconds
+    hours, remainder = divmod(seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    # Format the time as a string
+    time_string = "{:02d}:{:02d}".format(hours, minutes)
+
+    return time_string
 
 
 # Function to convert datetime.time to timedelta
