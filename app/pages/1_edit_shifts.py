@@ -1,6 +1,8 @@
 import streamlit as st
 from datetime import timedelta, timezone, datetime
 
+from sqlalchemy.exc import IntegrityError
+
 from utils import print_session_state
 from models import (
     User,
@@ -55,11 +57,17 @@ if st.session_state.is_admin == True:
                         status="working",
                         # Add other fields as necessary, e.g. start_time, end_time, total_break
                     )
-                    session.add(new_shift)
-                    session.commit()
-                    st.success(
-                        f"Shift on {new_shift_date} created successfully for user {user_id_name_dict[st.session_state.selected_user_id]}"
-                    )
+                    try:
+                        session.add(new_shift)
+                        session.commit()
+                        st.success(
+                            f"Shift on {new_shift_date} created successfully for user {user_id_name_dict[st.session_state.selected_user_id]}"
+                        )
+                    except IntegrityError:
+                        st.error(
+                            f"A shift for user {user_id_name_dict[st.session_state.selected_user_id]} on {new_shift_date} already exists."
+                        )
+            session.rollback()  # Roll back the session to a clean state
 
     # Dropdown to select a shift after a user has been selected
     if st.session_state.selected_user_id:
@@ -100,21 +108,31 @@ if st.session_state.is_admin == True:
                     "End Time", shift_to_edit.end_time, step=timedelta(minutes=1)
                 )
 
-                # Create two columns for the total break hours and minutes inputs
+                break_hours = (
+                    int(shift_to_edit.total_break.total_seconds() // 3600)
+                    if shift_to_edit.total_break
+                    else 0
+                )
+                break_minutes = (
+                    int((shift_to_edit.total_break.total_seconds() % 3600) // 60)
+                    if shift_to_edit.total_break
+                    else 0
+                )
+
                 col1, col2 = st.columns(2)
                 with col1:
                     total_break_hours = st.number_input(
                         "Total Break Hours",
                         min_value=0,
                         max_value=23,
-                        value=shift_to_edit.total_break.seconds // 3600,
+                        value=break_hours,  # Converts to int for the number_input
                     )
                 with col2:
                     total_break_minutes = st.number_input(
                         "Total Break Minutes",
                         min_value=0,
                         max_value=59,
-                        value=(shift_to_edit.total_break.seconds // 60) % 60,
+                        value=break_minutes,  # Converts to int and gets the remainder of hours
                         step=1,
                     )
 
