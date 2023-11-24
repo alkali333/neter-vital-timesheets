@@ -37,10 +37,13 @@ if st.session_state.is_admin == True:
     if st.button("Confirm User"):
         st.session_state.selected_user_id = selected_user_id
         st.session_state.selected_shift_id = None  # Reset shift selection
+        st.session_state.selected_user_name = user_id_name_dict.get(
+            selected_user_id, None
+        )
 
     # Display the selected user
     if st.session_state["selected_user_id"]:
-        st.write(
+        st.info(
             f"User selected: {user_id_name_dict[st.session_state.selected_user_id]}"
         )
         if st.session_state.selected_shift_id is None:
@@ -97,6 +100,12 @@ if st.session_state.is_admin == True:
     if st.session_state.selected_shift_id:
         with SessionLocal() as session:
             shift_to_edit = session.query(Shift).get(st.session_state.selected_shift_id)
+
+            st.info(
+                f"Editing Shift for {st.session_state.user_name} on {shift_to_edit.date}",
+                icon="📅",
+            )
+
             with st.form(f"shift_{shift_to_edit.shift_id}"):
                 date = st.date_input("Date", shift_to_edit.date, disabled=True)
                 start_time = st.time_input(
@@ -149,8 +158,12 @@ if st.session_state.is_admin == True:
                     timezone_utc = timezone(timedelta(hours=0))
 
                     # Combine date and time to create datetime objects with timezone information
-                    start_datetime = datetime.combine(date, start_time)
-                    end_datetime = datetime.combine(date, end_time)
+                    start_datetime = (
+                        datetime.combine(date, start_time) if start_time else None
+                    )
+                    end_datetime = (
+                        datetime.combine(date, end_time) if end_time else None
+                    )
 
                     # Convert the break input hours and minutes to a timedelta
                     # this will work with Interval in the model
