@@ -79,7 +79,7 @@ if st.session_state.is_admin == True:
                 session.query(Shift)
                 .filter(Shift.user_id == st.session_state.selected_user_id)
                 .order_by(Shift.date.desc(), Shift.start_time.desc())
-                .limit(7)  # show the most recent 7 shifts
+                .limit(14)  # show the most recent 14 shifts
                 .all()
             )
         shift_id_date_dict = {shift.shift_id: shift.date for shift in recent_shifts}
@@ -88,7 +88,7 @@ if st.session_state.is_admin == True:
             options=[None] + list(shift_id_date_dict.keys()),
             format_func=lambda x: "Select shift"
             if x is None
-            else shift_id_date_dict[x].strftime("%Y-%m-%d"),
+            else shift_id_date_dict[x].strftime("%a %m/%d/%y"),
         )
 
         # Button to confirm shift selection and store it in session state
@@ -99,7 +99,8 @@ if st.session_state.is_admin == True:
     # Form to edit the selected shift
     if st.session_state.selected_shift_id:
         with SessionLocal() as session:
-            shift_to_edit = session.query(Shift).get(st.session_state.selected_shift_id)
+            # shift_to_edit = session.query(Shift).get(st.session_state.selected_shift_id)
+            shift_to_edit = session.get(Shift, st.session_state.selected_shift_id)
 
             st.info(
                 f"Editing Shift for {st.session_state.user_name} on {shift_to_edit.date}",

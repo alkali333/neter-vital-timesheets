@@ -61,7 +61,7 @@ if st.session_state.is_admin:
                         shifts_data.append(
                             {
                                 "User": shift.user.name,
-                                "Date": shift.date,
+                                "Date": shift.date.strftime("%a %m/%d/%y"),
                                 "Start": shift.start_time.strftime("%H:%M"),
                                 "End": shift.end_time.strftime("%H:%M"),
                                 "Status": shift.status,
