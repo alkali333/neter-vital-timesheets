@@ -29,6 +29,15 @@ class User(Base):
     name = Column(String)
     email = Column(String(length=320), nullable=False, index=True)
     password = Column(String, nullable=False)
+    role = Column(String, default="User")
+
+    # Add a constraint to limit the values
+    __table_args__ = (
+        CheckConstraint(
+            role.in_(("User", "Administrator")),
+            name="check_valid_role",
+        ),
+    )
 
     # Relationship to the shifts table
     shifts = relationship("Shift", back_populates="user")
@@ -102,20 +111,3 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
-
-with SessionLocal() as session:
-    # Check if the user with ID 1 exists
-    user_with_id_1 = session.query(User).filter_by(user_id=1).first()
-
-    if user_with_id_1 is None:
-        # If default user doesn't exist, insert it
-        new_user = User(
-            user_id=1,
-            name="Jake",
-            email="jake@alkalimedia.co.uk",
-            password="pbkdf2:sha256:600000$HfEqpWbeavZrTMNl$9d7177999ac36590ea40c868699a8a972315806961c68610950a4fa9ab540028",
-        )
-        # Add the new user to the session
-        session.add(new_user)
-        # Commit the changes to the database
-        session.commit()

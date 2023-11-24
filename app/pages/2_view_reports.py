@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from utils import print_session_state, format_timedelta, timedelta_to_time_string
 from models import User, Shift, SessionLocal
 
+if "is_admin" not in st.session_state:
+    st.session_state.is_admin = False
 
 if st.session_state.is_admin:
     # Display the admin interface

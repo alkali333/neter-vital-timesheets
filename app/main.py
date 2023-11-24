@@ -7,12 +7,13 @@ from streamlit_autorefresh import st_autorefresh
 from utils import format_timedelta, print_session_state
 from models import User, Shift, SessionLocal
 from db_functions import (
-    authenticate,
     find_shift_for_user_today,
     start_shift,
     start_break,
     end_break,
     end_shift,
+    create_default_user,
+    handle_login,
 )
 
 find_dotenv()
@@ -34,9 +35,10 @@ if "is_admin" not in st.session_state:
     st.session_state.is_admin = False
 
 
-# callback function so no need for re-run
+# clear the entire session state just in case
 def logout():
     st.session_state.user_id = None
+    st.session_state.is_admin = False
 
 
 # Set up an auto-refresh interval of 30 seconds
@@ -54,26 +56,11 @@ formatted_date = current_utc_datetime.strftime("%d %B %Y")
 st.header(formatted_date)
 
 
+with SessionLocal() as session:
+    create_default_user(session)
+
+
 # Callback function for handling login
-def handle_login(email, password):
-    with SessionLocal() as session:
-        authenticated = authenticate(session, User, email, password)
-
-    if authenticated:
-        with SessionLocal() as session:
-            user_in_db = session.query(User).filter_by(email=email).first()
-
-        current_user = user_in_db.user_id
-
-        if current_user == 1:
-            st.session_state.is_admin = True
-            st.write("Admin User Detected")
-
-        st.session_state.user_id = current_user
-        st.session_state.user_name = user_in_db.name
-        st.rerun()
-    else:
-        st.sidebar.error("The login details are incorrect")
 
 
 # Check if the user is not logged in
@@ -87,7 +74,8 @@ if not st.session_state.user_id:
 
         # Create a form and use the 'on_click' parameter to specify the callback function
         if st.form_submit_button(label="Login"):
-            handle_login(email, password)
+            with SessionLocal() as session:
+                handle_login(email, password, session)
 
 
 else:

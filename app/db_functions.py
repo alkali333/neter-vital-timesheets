@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
+import streamlit as st
 
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
@@ -16,14 +17,27 @@ from sqlalchemy import and_
 
 
 # Authenticating user with database
-def authenticate(session, table, email: str, password: str) -> bool:
+def handle_login(email, password, session):
     try:
-        user_in_db = session.query(table).filter_by(email=email).one()
+        user_in_db = session.query(User).filter_by(email=email).one()
         if check_password_hash(user_in_db.password, password):
-            return True
+            # Authentication successful, handle user role and session state
+            current_user_role = user_in_db.role
+
+            if current_user_role == "Administrator":
+                st.session_state.is_admin = True
+                print("Admin User Detected")
+            else:
+                print("Standard User Detected")
+            st.session_state.user_id = user_in_db.user_id
+            st.session_state.user_name = user_in_db.name
+            st.rerun()
+        else:
+            # Authentication failed
+            st.sidebar.error("The login details are incorrect")
     except NoResultFound:
-        pass
-    return False
+        # User not found
+        st.sidebar.error("The login details are incorrect")
 
 
 def find_shift_for_user_today(user_id: int, session: Session):
@@ -136,3 +150,21 @@ def end_shift(session, shift_id):
 
     except NoResultFound:
         print(f"No shift found with ID {shift_id}.")
+
+
+def create_default_user(session):
+    # Check if the user with ID 1 exists
+    user_with_id_1 = session.query(User).filter_by(user_id=1).first()
+
+    if user_with_id_1 is None:
+        # If default user doesn't exist, insert it
+        new_user = User(
+            user_id=1,
+            name="Jake",
+            email="jake@alkalimedia.co.uk",
+            password="pbkdf2:sha256:600000$HfEqpWbeavZrTMNl$9d7177999ac36590ea40c868699a8a972315806961c68610950a4fa9ab540028",
+        )
+        # Add the new user to the session
+        session.add(new_user)
+        # Commit the changes to the database
+        session.commit()

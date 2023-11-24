@@ -8,6 +8,8 @@ from models import (
     SessionLocal,
 )  # Assuming your SQLAlchemy models are in models.py
 
+if "is_admin" not in st.session_state:
+    st.session_state.is_admin = False
 
 if st.session_state.is_admin == True:
     st.title("Shifts Admin Screen")
