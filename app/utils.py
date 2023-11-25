@@ -9,6 +9,12 @@ from datetime import datetime
 #     return utc_now.replace(tzinfo=pytz.utc).astimezone(timezone)
 
 
+def logout():
+    st.session_state.user_id = None
+    st.session_state.is_admin = False
+    st.session_state.user_name = None
+
+
 def format_timedelta(td):
     if not td:
         return "None"

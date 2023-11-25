@@ -1,200 +1,152 @@
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-02', '2023-10-02 00:00:45.137035', '2023-10-02 06:00:45.137035', '2023-10-02 01:00:45.137035', '0:58:00', 'finished working');
+    VALUES (1, '2023-11-22', '2023-11-22 05:52:37.227723', '2023-11-22 16:52:37.227723', '2023-11-22 06:52:37.227723', '0:39:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-18', '2023-10-18 01:42:41.910844', '2023-10-18 05:42:41.910844', '2023-10-18 04:42:41.910844', '0:50:00', 'finished working');
+    VALUES (3, '2023-11-21', '2023-11-21 02:41:37.940608', '2023-11-21 07:41:37.940608', '2023-11-21 04:41:37.940608', '0:27:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-06', '2023-10-06 01:53:07.884701', '2023-10-06 09:53:07.884701', '2023-10-06 02:53:07.884701', '0:27:00', 'finished working');
+    VALUES (3, '2023-11-18', '2023-11-18 02:56:17.710314', '2023-11-18 12:56:17.710314', '2023-11-18 03:56:17.710314', '0:23:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-26', '2023-10-26 00:04:07.931046', '2023-10-26 06:04:07.931046', '2023-10-26 01:04:07.931046', '0:48:00', 'finished working');
+    VALUES (1, '2023-10-13', '2023-10-13 00:48:39.588748', '2023-10-13 05:48:39.588748', '2023-10-13 02:48:39.588748', '0:47:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-09-30', '2023-09-30 22:29:16.768160', '2023-10-01 07:29:16.768160', '2023-09-30 23:29:16.768160', '0:47:00', 'finished working');
+    VALUES (1, '2023-10-21', '2023-10-21 19:56:00.389507', '2023-10-22 05:56:00.389507', '2023-10-21 22:56:00.389507', '0:32:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-11-14', '2023-11-14 23:07:58.404442', '2023-11-15 10:07:58.404442', '2023-11-15 02:07:58.404442', '0:51:00', 'finished working');
+    VALUES (1, '2023-11-20', '2023-11-20 22:28:42.569157', '2023-11-21 04:28:42.569157', '2023-11-20 23:28:42.569157', '0:50:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-16', '2023-10-16 21:59:07.835305', '2023-10-17 08:59:07.835305', '2023-10-16 23:59:07.835305', '0:58:00', 'finished working');
+    VALUES (1, '2023-10-09', '2023-10-09 16:03:28.731495', '2023-10-09 22:03:28.731495', '2023-10-09 17:03:28.731495', '0:24:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-11-09', '2023-11-09 16:26:39.130745', '2023-11-10 01:26:39.130745', '2023-11-09 18:26:39.130745', '0:59:00', 'finished working');
+    VALUES (3, '2023-10-07', '2023-10-07 09:31:33.643332', '2023-10-07 15:31:33.643332', '2023-10-07 11:31:33.643332', '0:51:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-11-10', '2023-11-10 17:39:24.963045', '2023-11-11 04:39:24.963045', '2023-11-10 18:39:24.963045', '0:38:00', 'finished working');
+    VALUES (1, '2023-11-02', '2023-11-02 04:04:31.131137', '2023-11-02 09:04:31.131137', '2023-11-02 05:04:31.131137', '0:30:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-24', '2023-10-24 08:40:26.065249', '2023-10-24 13:40:26.065249', '2023-10-24 10:40:26.065249', '0:40:00', 'finished working');
+    VALUES (2, '2023-09-26', '2023-09-26 07:46:33.015838', '2023-09-26 12:46:33.015838', '2023-09-26 08:46:33.015838', '0:29:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-09-30', '2023-09-30 14:30:41.308661', '2023-10-01 02:30:41.308661', '2023-09-30 15:30:41.308661', '0:37:00', 'finished working');
+    VALUES (3, '2023-10-16', '2023-10-16 06:56:22.655757', '2023-10-16 15:56:22.655757', '2023-10-16 08:56:22.655757', '0:32:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-06', '2023-10-06 05:42:56.281345', '2023-10-06 16:42:56.281345', '2023-10-06 07:42:56.281345', '0:59:00', 'finished working');
+    VALUES (2, '2023-11-09', '2023-11-09 23:36:32.636665', '2023-11-10 03:36:32.636665', '2023-11-10 02:36:32.636665', '0:21:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-21', '2023-10-21 21:11:02.185702', '2023-10-22 05:11:02.185702', '2023-10-21 23:11:02.185702', '0:59:00', 'finished working');
+    VALUES (2, '2023-11-21', '2023-11-21 16:33:37.205144', '2023-11-21 20:33:37.205144', '2023-11-21 19:33:37.205144', '0:29:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-30', '2023-10-30 19:15:26.241696', '2023-10-31 05:15:26.241696', '2023-10-30 21:15:26.241696', '0:41:00', 'finished working');
+    VALUES (3, '2023-10-27', '2023-10-27 03:33:04.961628', '2023-10-27 10:33:04.961628', '2023-10-27 04:33:04.961628', '0:41:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-28', '2023-10-28 22:57:41.855338', '2023-10-29 03:57:41.855338', '2023-10-29 00:57:41.855338', '0:27:00', 'finished working');
+    VALUES (3, '2023-09-26', '2023-09-26 16:31:24.425651', '2023-09-27 02:31:24.425651', '2023-09-26 19:31:24.425651', '0:25:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-11-11', '2023-11-11 16:48:09.448458', '2023-11-11 23:48:09.448458', '2023-11-11 17:48:09.448458', '0:53:00', 'finished working');
+    VALUES (2, '2023-09-27', '2023-09-27 19:42:25.000694', '2023-09-28 00:42:25.000694', '2023-09-27 22:42:25.000694', '0:43:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-11-03', '2023-11-03 05:04:09.708672', '2023-11-03 11:04:09.708672', '2023-11-03 08:04:09.708672', '0:17:00', 'finished working');
+    VALUES (3, '2023-10-13', '2023-10-13 06:39:09.848138', '2023-10-13 12:39:09.848138', '2023-10-13 08:39:09.848138', '0:39:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-11-15', '2023-11-15 19:59:19.153570', '2023-11-15 23:59:19.153570', '2023-11-15 21:59:19.153570', '0:48:00', 'finished working');
+    VALUES (3, '2023-11-22', '2023-11-22 06:16:05.061562', '2023-11-22 16:16:05.061562', '2023-11-22 07:16:05.061562', '0:24:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-02', '2023-10-02 12:09:09.847427', '2023-10-02 20:09:09.847427', '2023-10-02 14:09:09.847427', '0:56:00', 'finished working');
+    VALUES (2, '2023-10-16', '2023-10-16 18:30:43.900916', '2023-10-16 23:30:43.900916', '2023-10-16 19:30:43.900916', '0:34:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-25', '2023-10-25 21:01:58.241953', '2023-10-26 08:01:58.241953', '2023-10-26 00:01:58.241953', '0:43:00', 'finished working');
+    VALUES (2, '2023-10-23', '2023-10-23 14:58:24.768661', '2023-10-23 18:58:24.768661', '2023-10-23 16:58:24.768661', '0:43:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-04', '2023-10-04 20:12:51.581482', '2023-10-05 06:12:51.581482', '2023-10-04 23:12:51.581482', '0:34:00', 'finished working');
+    VALUES (2, '2023-11-05', '2023-11-05 02:07:42.935415', '2023-11-05 08:07:42.935415', '2023-11-05 05:07:42.935415', '0:45:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-11-17', '2023-11-17 12:29:13.695884', '2023-11-17 19:29:13.695884', '2023-11-17 14:29:13.695884', '0:52:00', 'finished working');
+    VALUES (2, '2023-11-20', '2023-11-20 05:49:20.698146', '2023-11-20 09:49:20.698146', '2023-11-20 07:49:20.698146', '0:59:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-11-10', '2023-11-10 16:40:13.885668', '2023-11-10 21:40:13.885668', '2023-11-10 18:40:13.885668', '0:20:00', 'finished working');
+    VALUES (1, '2023-10-11', '2023-10-11 09:01:16.059325', '2023-10-11 21:01:16.059325', '2023-10-11 10:01:16.059325', '0:21:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-23', '2023-10-23 21:28:58.753715', '2023-10-24 08:28:58.753715', '2023-10-23 23:28:58.753715', '0:44:00', 'finished working');
+    VALUES (1, '2023-10-08', '2023-10-08 12:13:28.265523', '2023-10-08 16:13:28.265523', '2023-10-08 13:13:28.265523', '0:19:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-18', '2023-10-18 14:04:31.068970', '2023-10-18 20:04:31.068970', '2023-10-18 15:04:31.068970', '0:39:00', 'finished working');
+    VALUES (2, '2023-11-12', '2023-11-12 09:36:18.254458', '2023-11-12 19:36:18.254458', '2023-11-12 11:36:18.254458', '0:54:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-29', '2023-10-29 17:48:53.239809', '2023-10-30 03:48:53.239809', '2023-10-29 18:48:53.239809', '0:37:00', 'finished working');
+    VALUES (2, '2023-11-17', '2023-11-17 17:49:08.325892', '2023-11-18 00:49:08.325892', '2023-11-17 20:49:08.325892', '0:35:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-09-28', '2023-09-28 23:53:09.490660', '2023-09-29 03:53:09.490660', '2023-09-29 02:53:09.490660', '0:49:00', 'finished working');
+    VALUES (3, '2023-10-05', '2023-10-05 23:29:52.609597', '2023-10-06 07:29:52.609597', '2023-10-06 02:29:52.609597', '0:42:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-09-28', '2023-09-28 00:27:58.417964', '2023-09-28 12:27:58.417964', '2023-09-28 02:27:58.417964', '0:59:00', 'finished working');
+    VALUES (1, '2023-10-03', '2023-10-03 23:11:59.527480', '2023-10-04 10:11:59.527480', '2023-10-04 01:11:59.527480', '0:47:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-09', '2023-10-09 01:45:00.826351', '2023-10-09 05:45:00.826351', '2023-10-09 03:45:00.826351', '0:27:00', 'finished working');
+    VALUES (2, '2023-10-17', '2023-10-17 03:45:29.410540', '2023-10-17 10:45:29.410540', '2023-10-17 06:45:29.410540', '0:17:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-03', '2023-10-03 10:04:24.415815', '2023-10-03 18:04:24.415815', '2023-10-03 11:04:24.415815', '0:47:00', 'finished working');
+    VALUES (2, '2023-11-07', '2023-11-07 12:46:04.855718', '2023-11-07 22:46:04.855718', '2023-11-07 13:46:04.855718', '0:46:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-09-28', '2023-09-28 21:18:02.133441', '2023-09-29 04:18:02.133441', '2023-09-29 00:18:02.133441', '0:32:00', 'finished working');
+    VALUES (2, '2023-10-27', '2023-10-27 07:19:31.503596', '2023-10-27 18:19:31.503596', '2023-10-27 08:19:31.503596', '0:43:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-11', '2023-10-11 09:11:08.693872', '2023-10-11 13:11:08.693872', '2023-10-11 11:11:08.693872', '0:18:00', 'finished working');
+    VALUES (1, '2023-11-04', '2023-11-04 15:46:38.059419', '2023-11-04 22:46:38.059419', '2023-11-04 18:46:38.059419', '0:59:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-16', '2023-10-16 23:32:00.534207', '2023-10-17 11:32:00.534207', '2023-10-17 02:32:00.534207', '0:23:00', 'finished working');
+    VALUES (1, '2023-10-05', '2023-10-05 02:07:36.461749', '2023-10-05 09:07:36.461749', '2023-10-05 03:07:36.461749', '0:24:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-09-27', '2023-09-27 14:37:48.181932', '2023-09-28 01:37:48.181932', '2023-09-27 17:37:48.181932', '0:48:00', 'finished working');
+    VALUES (3, '2023-11-23', '2023-11-23 16:18:42.181038', '2023-11-23 22:18:42.181038', '2023-11-23 18:18:42.181038', '0:32:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-11-03', '2023-11-03 08:42:31.629172', '2023-11-03 13:42:31.629172', '2023-11-03 10:42:31.629172', '0:47:00', 'finished working');
+    VALUES (1, '2023-10-29', '2023-10-29 04:38:14.160777', '2023-10-29 15:38:14.160777', '2023-10-29 06:38:14.160777', '0:39:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-09-26', '2023-09-26 04:48:19.236797', '2023-09-26 09:48:19.236797', '2023-09-26 05:48:19.236797', '0:54:00', 'finished working');
+    VALUES (1, '2023-10-17', '2023-10-17 12:16:37.292955', '2023-10-18 00:16:37.292955', '2023-10-17 14:16:37.292955', '1:00:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-23', '2023-10-23 14:10:32.960557', '2023-10-23 19:10:32.960557', '2023-10-23 17:10:32.960557', '0:22:00', 'finished working');
+    VALUES (1, '2023-11-16', '2023-11-16 18:05:42.103278', '2023-11-17 05:05:42.103278', '2023-11-16 19:05:42.103278', '0:34:00', 'finished working');
     
 
     INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-26', '2023-10-26 02:37:39.883903', '2023-10-26 11:37:39.883903', '2023-10-26 03:37:39.883903', '0:52:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-11-08', '2023-11-08 21:53:58.324842', '2023-11-09 09:53:58.324842', '2023-11-08 23:53:58.324842', '0:57:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-14', '2023-10-14 19:24:33.526978', '2023-10-15 02:24:33.526978', '2023-10-14 20:24:33.526978', '0:32:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-11-23', '2023-11-23 13:24:37.212082', '2023-11-23 17:24:37.212082', '2023-11-23 14:24:37.212082', '0:50:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-11-01', '2023-11-01 08:56:58.117917', '2023-11-01 20:56:58.117917', '2023-11-01 11:56:58.117917', '0:21:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-26', '2023-10-26 18:42:53.052939', '2023-10-26 23:42:53.052939', '2023-10-26 20:42:53.052939', '0:26:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-10-16', '2023-10-16 23:03:45.741933', '2023-10-17 09:03:45.741933', '2023-10-17 01:03:45.741933', '0:34:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-11-10', '2023-11-10 14:57:13.240081', '2023-11-10 20:57:13.240081', '2023-11-10 15:57:13.240081', '0:38:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-21', '2023-10-21 02:10:12.991408', '2023-10-21 11:10:12.991408', '2023-10-21 03:10:12.991408', '0:46:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-09-27', '2023-09-27 15:00:13.946757', '2023-09-27 22:00:13.946757', '2023-09-27 17:00:13.946757', '0:23:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (2, '2023-10-12', '2023-10-12 15:39:04.145084', '2023-10-13 00:39:04.145084', '2023-10-12 18:39:04.145084', '0:48:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (1, '2023-10-27', '2023-10-27 15:00:26.966742', '2023-10-27 21:00:26.966742', '2023-10-27 18:00:26.966742', '0:29:00', 'finished working');
-    
-
-    INSERT INTO shifts (user_id, date, start_time, end_time, current_break_start, total_break, status)
-    VALUES (3, '2023-11-21', '2023-11-21 04:32:33.205278', '2023-11-21 14:32:33.205278', '2023-11-21 07:32:33.205278', '0:21:00', 'finished working');
+    VALUES (3, '2023-11-10', '2023-11-10 21:26:23.332759', '2023-11-11 08:26:23.332759', '2023-11-10 23:26:23.332759', '0:56:00', 'finished working');
     

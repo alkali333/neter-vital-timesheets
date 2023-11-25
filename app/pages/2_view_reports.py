@@ -6,10 +6,10 @@ from sqlalchemy.orm import Session
 
 
 from utils import print_session_state, format_timedelta, timedelta_to_time_string
+from init import init_app
 from models import User, Shift, SessionLocal
 
-if "is_admin" not in st.session_state:
-    st.session_state.is_admin = False
+init_app()
 
 if st.session_state.is_admin:
     # Display the admin interface
@@ -93,7 +93,7 @@ if st.session_state.is_admin:
                     st.write("No shifts for selected dates")
 
 else:
-    "Only the administrator can view this page"
+    st.warning("Only an administrator can view this page")
 
 
 print_session_state()

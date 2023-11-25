@@ -1,10 +1,10 @@
 import streamlit as st
 from werkzeug.security import generate_password_hash
 from models import SessionLocal, User
+from init import init_app
 
 
-if "is_admin" not in st.session_state:
-    st.session_state.is_admin = False
+init_app()
 
 if st.session_state.is_admin:
     with st.form("new_user_form", clear_on_submit=True):
@@ -36,4 +36,4 @@ if st.session_state.is_admin:
             else:
                 st.error("Passwords do not match.")
 else:
-    st.write("Only administrators can view this page")
+    st.warning("Only an administrator can view this page")

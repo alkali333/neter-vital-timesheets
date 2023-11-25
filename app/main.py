@@ -5,6 +5,8 @@ from dotenv import find_dotenv
 from streamlit_autorefresh import st_autorefresh
 
 from utils import format_timedelta, print_session_state
+from init import init_app
+
 from models import User, Shift, SessionLocal
 from db_functions import (
     find_shift_for_user_today,
@@ -27,19 +29,7 @@ st.set_page_config(
     menu_items=None,
 )
 
-# Initialise state variables that are not set right away
-if "user_id" not in st.session_state:
-    st.session_state.user_id = None
-
-if "is_admin" not in st.session_state:
-    st.session_state.is_admin = False
-
-
-# clear the entire session state just in case
-def logout():
-    st.session_state.user_id = None
-    st.session_state.is_admin = False
-
+init_app()
 
 # Set up an auto-refresh interval of 30 seconds
 # This is to keep the work hours updated for working users
@@ -47,41 +37,12 @@ refresh_interval_ms = 30 * 1000  # Convert seconds to milliseconds
 st_autorefresh(interval=refresh_interval_ms, key="data_refresh")
 
 
-st.sidebar.image("./images/logo.png", width=222)
-# Get the current date and time in UTC
-current_utc_datetime = datetime.now(timezone.utc)
-
-formatted_date = current_utc_datetime.strftime("%d %B %Y")
-
-st.header(formatted_date)
-
-
 with SessionLocal() as session:
     create_default_user(session)
 
-
-# Callback function for handling login
-
-
-# Check if the user is not logged in
-if not st.session_state.user_id:
-    # Use a form for the login inputs and button
-    with st.sidebar.form(key="login_form"):
-        email = st.text_input("Email", value="jake@alkalimedia.co.uk")
-        password = st.text_input(
-            "Password", type="password", value=os.getenv("DEBUGGING_PASSWORD")
-        )
-
-        # Create a form and use the 'on_click' parameter to specify the callback function
-        if st.form_submit_button(label="Login"):
-            with SessionLocal() as session:
-                handle_login(email, password, session)
-
-
-else:
-    st.sidebar.write(f"Welcome {st.session_state.user_name}")
+# has the user logged in?
+if st.session_state.user_id:
     status_placeholder = st.sidebar.empty()
-    st.sidebar.button(label="Log Out", on_click=logout)
 
     with SessionLocal() as session:
         # check if there is already a shift today

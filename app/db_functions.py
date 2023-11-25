@@ -163,6 +163,7 @@ def create_default_user(session):
             name="Jake",
             email="jake@alkalimedia.co.uk",
             password="pbkdf2:sha256:600000$HfEqpWbeavZrTMNl$9d7177999ac36590ea40c868699a8a972315806961c68610950a4fa9ab540028",
+            role="Administrator",
         )
         # Add the new user to the session
         session.add(new_user)

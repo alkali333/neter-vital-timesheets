@@ -3,6 +3,8 @@ from datetime import timedelta, timezone, datetime
 
 from sqlalchemy.exc import IntegrityError
 
+from init import init_app
+
 from utils import print_session_state
 from models import (
     User,
@@ -10,8 +12,8 @@ from models import (
     SessionLocal,
 )  # Assuming your SQLAlchemy models are in models.py
 
-if "is_admin" not in st.session_state:
-    st.session_state.is_admin = False
+init_app()
+
 
 if st.session_state.is_admin == True:
     st.title("Shifts Admin Screen")
@@ -181,7 +183,7 @@ if st.session_state.is_admin == True:
                     st.success("Shift updated successfully!")
 
 else:
-    "Only the administrator can view this page"
+    st.warning("Only an administrator can view this page")
 
 
 print_session_state()
