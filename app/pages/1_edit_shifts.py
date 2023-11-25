@@ -156,7 +156,7 @@ if st.session_state.is_admin == True:
 
                 if st.form_submit_button("Update Shift"):
                     # You can adjust the timezone offset as needed, here using UTC/GMT
-                    timezone_utc = timezone(timedelta(hours=0))
+                    # timezone_utc = timezone(timedelta(hours=0))
 
                     # Combine date and time to create datetime objects with timezone information
                     start_datetime = (

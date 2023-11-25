@@ -1,5 +1,12 @@
 from datetime import timedelta, time
 import streamlit as st
+from datetime import datetime
+
+
+# def local_now():
+#     timezone = pytz.timezone(os.getenv("TIMEZONE", "UTC"))
+#     utc_now = datetime.utcnow()
+#     return utc_now.replace(tzinfo=pytz.utc).astimezone(timezone)
 
 
 def format_timedelta(td):

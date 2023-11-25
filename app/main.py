@@ -137,9 +137,8 @@ else:
                         end_break(shift_id=st.session_state.shift_id, session=session)
                         st.rerun()
             elif user_shift_today.status == "finished working":
-                st.write("You have finished your shift today")
-                st.write(
-                    f"Total payable time:{format_timedelta(user_shift_today.payable_hours)}"
+                st.info(
+                    f"You have finished your shift today. Total payable time:{format_timedelta(user_shift_today.payable_hours)}"
                 )
                 # if st.button(label="Resume my shift", use_container_width=True):
                 #     resume_shift(shift_id=st.session_state.shift_id, session=session)

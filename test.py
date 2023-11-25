@@ -1,6 +1,12 @@
 import streamlit as st
 from app.models import User, SessionLocal
 from datetime import datetime, timedelta
+import pytz
+import os
+
+from dotenv import load_dotenv
+
+from app.utils import get_today
 
 with SessionLocal() as session:
     users = session.query(User).all()
@@ -27,3 +33,8 @@ with st.form("Test Form"):
         st.write(f"Id:{selected_name} | Name: {name_dict[selected_name]}")
 
         st.write(f"Start: {start_date}, End: {end_date}")
+
+
+tz_now = get_today()
+
+st.write(f'The time is {tz_now.strftime("%H:%M")}')

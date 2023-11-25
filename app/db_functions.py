@@ -1,19 +1,23 @@
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
 import streamlit as st
+from dotenv import load_dotenv
 
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import func
 
+from utils import datetime
+
 from models import (
     Shift,
     User,
 )  # Assuming you have a models.py file with your User and Shift classes
-from sqlalchemy import and_
 
 # Initialize your database session
 # session = Session()
+
+load_dotenv()
 
 
 # Authenticating user with database
@@ -40,7 +44,8 @@ def handle_login(email, password, session):
 
 def find_shift_for_user_today(user_id: int, session: Session):
     # Get the current date, with the time set to midnight
-    today = datetime.utcnow().date()
+
+    today = datetime.now().date()
 
     # Query for existing shifts for the user that start today
     existing_shift = (
@@ -62,13 +67,13 @@ def start_shift(user_id: int, session: Session):
     """
     if find_shift_for_user_today(user_id=user_id, session=session):
         raise ValueError(
-            f"Cannot create shift: shift already exists for user: {user_id} on {datetime.utcnow().date()} "
+            f"Cannot create shift: shift already exists for user: {user_id} on {datetime.now.date()} "
         )
 
     new_shift = Shift(
         user_id=user_id,
-        date=datetime.utcnow().date(),
-        start_time=datetime.utcnow(),
+        date=datetime.now().date(),
+        start_time=datetime.now(),
         status="working",
     )
     session.add(new_shift)
@@ -136,11 +141,8 @@ def end_shift(session, shift_id):
         if shift.status != "working":
             raise Exception(f"Shift with ID {shift_id} is not in a 'working' status.")
 
-        # Get the current time
-        current_time = datetime.now()
-
         # Update the shift instance
-        shift.end_time = current_time
+        shift.end_time = datetime.now()
         shift.status = "finished working"
 
         # Commit the changes to the database
