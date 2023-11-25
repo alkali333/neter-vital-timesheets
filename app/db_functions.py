@@ -24,11 +24,9 @@ def handle_login(email, password, session):
             # Authentication successful, handle user role and session state
             current_user_role = user_in_db.role
 
-            if current_user_role == "Administrator":
-                st.session_state.is_admin = True
-                print("Admin User Detected")
-            else:
-                print("Standard User Detected")
+            st.session_state.is_admin = (
+                True if current_user_role == "Administrator" else False
+            )
             st.session_state.user_id = user_in_db.user_id
             st.session_state.user_name = user_in_db.name
             st.rerun()

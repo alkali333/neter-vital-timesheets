@@ -93,7 +93,7 @@ class Shift(Base):
             return self.total_time_worked - total_break_duration
 
     # Relationship to the users table
-    user = relationship("User", back_populates="shifts")
+    user = relationship("User", back_populates="shifts", cascade="all, delete")
 
 
 if os.environ.get("SSLMODE") == "True":

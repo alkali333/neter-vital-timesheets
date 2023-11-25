@@ -17,8 +17,10 @@ if st.session_state.is_admin:
 
     # Define the form
     with st.form(key="my_form"):
-        selected_day = st.date_input("Select start day", datetime.today())
-        report_type = st.radio("Report Type", options=["Daily", "Weekly", "Monthly"])
+        start_date, end_date = st.date_input(
+            "Choose start and end dates",
+            (datetime.today(), datetime.today() + timedelta(days=6)),
+        )
 
         # Dropdown to select a user
         with SessionLocal() as session:
@@ -36,14 +38,14 @@ if st.session_state.is_admin:
         submitted = st.form_submit_button("Submit")
 
         if submitted:
-            report_type_days = {"Daily": 1, "Weekly": 6, "Monthly": 30}
+            # report_type_days = {"Daily": 1, "Weekly": 6, "Monthly": 30}
 
-            end_of_week = selected_day + timedelta(days=report_type_days[report_type])
+            # end_of_week = selected_day + timedelta(days=report_type_days[report_type])
 
             # Query for shifts in the selected week
             with SessionLocal() as db_session:
                 query = db_session.query(Shift).filter(
-                    Shift.date >= selected_day, Shift.date <= end_of_week
+                    Shift.date >= start_date, Shift.date <= end_date
                 )
 
                 # If a specific user is selected, filter by user_id
@@ -57,7 +59,9 @@ if st.session_state.is_admin:
                 if shifts_in_week:
                     # Create a list of dictionaries, each representing a row in the DataFrame
                     shifts_data = []
+                    total_payable_hours = timedelta()
                     for shift in shifts_in_week:
+                        total_payable_hours += shift.payable_hours
                         shifts_data.append(
                             {
                                 "User": shift.user.name,
@@ -78,6 +82,13 @@ if st.session_state.is_admin:
 
                     # Display the DataFrame as a table in Streamlit
                     st.table(shifts_df.set_index("User"))
+
+                    st.info(
+                        f"""
+                            {format_timedelta(total_payable_hours)} Total Payable Hours for 
+                            {start_date.strftime("%a %m/%d/%y")} - {end_date.strftime("%a %m/%d/%y")}
+                         """
+                    )
                 else:
                     st.write("No shifts for selected dates")
 

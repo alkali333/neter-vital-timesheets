@@ -1,5 +1,6 @@
 import streamlit as st
 from app.models import User, SessionLocal
+from datetime import datetime, timedelta
 
 with SessionLocal() as session:
     users = session.query(User).all()
@@ -14,7 +15,15 @@ with st.form("Test Form"):
         options=[None] + list(name_dict.keys()),
         format_func=lambda x: "Choose a name" if x is None else name_dict[x],
     )
+
+    start_date, end_date = st.date_input(
+        "Choose start and end dates",
+        (datetime.today(), datetime.today() + timedelta(days=6)),
+    )
+
     submitted = st.form_submit_button("Go")
 
     if submitted:
         st.write(f"Id:{selected_name} | Name: {name_dict[selected_name]}")
+
+        st.write(f"Start: {start_date}, End: {end_date}")
