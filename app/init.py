@@ -23,10 +23,8 @@ def init_app():
     if not st.session_state.user_id:
         # Use a form for the login inputs and button
         with st.sidebar.form(key="login_form"):
-            email = st.text_input("Email", value="jake@alkalimedia.co.uk")
-            password = st.text_input(
-                "Password", type="password", value=os.getenv("DEBUGGING_PASSWORD")
-            )
+            email = st.text_input("Email")
+            password = st.text_input("Password", type="password")
 
             # Create a form and use the 'on_click' parameter to specify the callback function
             if st.form_submit_button(label="Login"):

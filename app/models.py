@@ -96,13 +96,20 @@ class Shift(Base):
     user = relationship("User", back_populates="shifts", cascade="all, delete")
 
 
-if os.environ.get("SSLMODE") == "True":
-    SQLALCHEMY_DATABASE_URL = f'postgresql://{os.getenv("DATABASE_USERNAME")}:{os.getenv("DATABASE_PASSWORD")}@{os.getenv("DATABASE_HOSTNAME")}:{os.getenv("DATABASE_PORT")}/{os.getenv("DATABASE_NAME")}?sslmode=require'
-else:
-    SQLALCHEMY_DATABASE_URL = f'postgresql://{os.getenv("DATABASE_USERNAME")}:{os.getenv("DATABASE_PASSWORD")}@{os.getenv("DATABASE_HOSTNAME")}:{os.getenv("DATABASE_PORT")}/{os.getenv("DATABASE_NAME")}'
+SQLALCHEMY_DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# debugging
-# print(f"Database URL: {SQLALCHEMY_DATABASE_URL}")
+
+pool_size = 10  # Maximum number of connections
+pool_timeout = 10  # Maximum time to wait for a connection
+pool_recycle = 3600  # Maximum age of connections in seconds
+
+# Fix on Heroku which automatically generates the connection string but
+# with the wrong format
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(
+        "postgres://", "postgresql://", 1
+    )
+
 
 # Setup the database connection
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
