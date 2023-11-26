@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import timedelta, timezone, datetime
+from datetime import timedelta, datetime
 
 from sqlalchemy.exc import IntegrityError
 
@@ -10,7 +10,7 @@ from models import (
     User,
     Shift,
     SessionLocal,
-)  # Assuming your SQLAlchemy models are in models.py
+)
 
 init_app()
 
@@ -114,10 +114,10 @@ if st.session_state.is_admin == True:
                 start_time = st.time_input(
                     "Start Time",
                     value=shift_to_edit.start_time,
-                    step=timedelta(minutes=1),
+                    step=timedelta(minutes=15),
                 )
                 end_time = st.time_input(
-                    "End Time", shift_to_edit.end_time, step=timedelta(minutes=1)
+                    "End Time", shift_to_edit.end_time, step=timedelta(minutes=15)
                 )
 
                 break_hours = (
