@@ -11,11 +11,9 @@ from models import User, Shift, SessionLocal
 
 init_app()
 
-if st.session_state.is_admin:
-    # Display the admin interface
-    st.title("Display Shifts")
+st.title(":calendar: View Shift Reports")
 
-    # Define the form
+if st.session_state.is_admin:
     with st.form(key="my_form"):
         start_date, end_date = st.date_input(
             "Choose start and end dates",
@@ -96,4 +94,4 @@ else:
     st.warning("Only an administrator can view this page")
 
 
-print_session_state()
+# print_session_state()

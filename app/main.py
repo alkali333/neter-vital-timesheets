@@ -4,7 +4,12 @@ import os
 from dotenv import find_dotenv
 from streamlit_autorefresh import st_autorefresh
 
-from utils import format_timedelta, print_session_state
+from utils import (
+    format_timedelta,
+    print_session_state,
+    get_closest_clock_icon,
+    get_spiritual_quote,
+)
 from init import init_app
 
 from models import User, Shift, SessionLocal
@@ -30,6 +35,12 @@ st.set_page_config(
 )
 
 init_app()
+
+current_datetime = datetime.now()
+
+st.title(f':date: {current_datetime.strftime("%d %B %Y")}')
+st.header(get_closest_clock_icon() + current_datetime.strftime("%H:%M"))
+st.info(f"Welcome, {st.session_state.user_name or 'Please Log In'}")
 
 # Set up an auto-refresh interval of 30 seconds
 # This is to keep the work hours updated for working users
@@ -113,4 +124,6 @@ if st.session_state.user_id:
                     st.rerun()
 
 
-print_session_state()
+# print_session_state()
+
+st.success(get_spiritual_quote())

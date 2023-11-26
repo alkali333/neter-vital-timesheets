@@ -6,6 +6,8 @@ from init import init_app
 
 init_app()
 
+st.title(":female-scientist: Add New Worker")
+
 if st.session_state.is_admin:
     with st.form("new_user_form", clear_on_submit=True):
         st.write("Add a New User")

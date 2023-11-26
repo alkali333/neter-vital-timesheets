@@ -1,6 +1,7 @@
-sqlalchemy
-python-dotenv
-psycopg2-binary
-streamlit
-streamlit-autorefresh
-pandas
+pandas==2.0.3
+python-dotenv==1.0.0
+SQLAlchemy==2.0.19
+streamlit==1.28.2
+streamlit_autorefresh==1.0.1
+Werkzeug==2.3.6
+psycopg2-binary==2.9.9

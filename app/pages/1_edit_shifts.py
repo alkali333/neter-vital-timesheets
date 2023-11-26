@@ -15,9 +15,9 @@ from models import (
 init_app()
 
 
-if st.session_state.is_admin == True:
-    st.title("Shifts Admin Screen")
+st.title(":lower_left_fountain_pen: Edit Shifts Manually")
 
+if st.session_state.is_admin == True:
     # Initialize session state variables if they don't exist
     if "selected_user_id" not in st.session_state:
         st.session_state.selected_user_id = None
@@ -186,4 +186,4 @@ else:
     st.warning("Only an administrator can view this page")
 
 
-print_session_state()
+# print_session_state()

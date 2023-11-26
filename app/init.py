@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from datetime import datetime
 
-from utils import logout
+from utils import logout, get_spiritual_quote, get_closest_clock_icon
 from models import SessionLocal
 from db_functions import handle_login
 
@@ -36,8 +36,3 @@ def init_app():
     if st.session_state.user_id:
         st.sidebar.write(f"Logged in as {st.session_state.user_name}")
         st.sidebar.button(label="Log Out", on_click=logout)
-
-    current_datetime = datetime.now()
-
-    st.header(current_datetime.strftime("%d %B %Y"))
-    st.info(f"Welcome, {st.session_state.user_name or 'Please Log In'}")
