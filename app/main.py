@@ -1,9 +1,9 @@
 import streamlit as st
-from datetime import datetime, timezone
+from datetime import datetime
 import os
 from dotenv import find_dotenv
 from streamlit_autorefresh import st_autorefresh
-from models import User, Shift, SessionLocal
+from models import SessionLocal
 
 from utils import (
     format_timedelta,
@@ -20,8 +20,6 @@ from db_functions import (
     start_break,
     end_break,
     end_shift,
-    create_default_user,
-    handle_login,
 )
 
 find_dotenv()
