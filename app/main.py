@@ -48,10 +48,6 @@ st.info(f"Welcome, {st.session_state.user_name or 'Please Log In'}")
 refresh_interval_ms = 30 * 1000  # Convert seconds to milliseconds
 st_autorefresh(interval=refresh_interval_ms, key="data_refresh")
 
-
-with SessionLocal() as session:
-    create_default_user(session)
-
 # has the user logged in?
 if st.session_state.user_id:
     status_placeholder = st.sidebar.empty()

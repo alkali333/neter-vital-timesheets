@@ -152,19 +152,19 @@ def end_shift(session, shift_id):
         print(f"No shift found with ID {shift_id}.")
 
 
-def create_default_user(session):
-    # Check if the user with ID 1 exists
-    user_with_id_1 = session.query(User).filter_by(user_id=1).first()
+# def create_default_user(session):
+#     # Check if the user with ID 1 exists
+#     user_with_id_1 = session.query(User).filter_by(user_id=1).first()
 
-    if user_with_id_1 is None:
-        # If default user doesn't exist, insert it
-        new_user = User(
-            name="Jake",
-            email="jake@alkalimedia.co.uk",
-            password="pbkdf2:sha256:600000$HfEqpWbeavZrTMNl$9d7177999ac36590ea40c868699a8a972315806961c68610950a4fa9ab540028",
-            role="Administrator",
-        )
-        # Add the new user to the session
-        session.add(new_user)
-        # Commit the changes to the database
-        session.commit()
+#     if user_with_id_1 is None:
+#         # If default user doesn't exist, insert it
+#         new_user = User(
+#             name="Jake",
+#             email="jake@alkalimedia.co.uk",
+#             password="pbkdf2:sha256:600000$HfEqpWbeavZrTMNl$9d7177999ac36590ea40c868699a8a972315806961c68610950a4fa9ab540028",
+#             role="Administrator",
+#         )
+#         # Add the new user to the session
+#         session.add(new_user)
+#         # Commit the changes to the database
+#         session.commit()
