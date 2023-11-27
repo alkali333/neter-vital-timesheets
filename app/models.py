@@ -52,10 +52,9 @@ class Shift(Base):
     total_break = Column(Interval)
     status = Column(String, default="not working")
 
-    # Add a constraint to limit the values
     __table_args__ = (
         CheckConstraint(
-            status.in_(("working", "on break", "not working", "finished working")),
+            "status IN ('working', 'on break', 'not working', 'finished working')",
             name="check_valid_status",
         ),
         UniqueConstraint("user_id", "date", name="_user_date_uc"),
