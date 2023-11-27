@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import os
 from dotenv import find_dotenv
 from streamlit_autorefresh import st_autorefresh
+from models import User, Shift, SessionLocal
 
 from utils import (
     format_timedelta,
@@ -12,7 +13,7 @@ from utils import (
 )
 from init import init_app
 
-from models import User, Shift, SessionLocal
+
 from db_functions import (
     find_shift_for_user_today,
     start_shift,

@@ -34,7 +34,7 @@ class User(Base):
 
     # Add a constraint to limit the values
     __table_args__ = (
-        CheckConstraint('role IN ("User", "Administrator")', name="check_valid_role"),
+        CheckConstraint("role IN ('User', 'Administrator')", name="check_valid_role"),
     )
 
     # Relationship to the shifts table
