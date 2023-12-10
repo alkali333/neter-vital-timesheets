@@ -50,8 +50,8 @@ if st.session_state.is_admin == True:
         )
         if st.session_state.selected_shift_id is None:
             with st.form("new_shift_form"):
-                # We use date_input to allow the admin to select a date for the new shift
-                new_shift_date = st.date_input("New Shift Date")
+                # British date format applied to the date picker
+                new_shift_date = st.date_input("New Shift Date", format="DD/MM/YYYY")
                 create_shift_button = st.form_submit_button("Create New Shift")
 
             if create_shift_button:
@@ -66,11 +66,11 @@ if st.session_state.is_admin == True:
                         session.add(new_shift)
                         session.commit()
                         st.success(
-                            f"Shift on {new_shift_date} created successfully for user {user_id_name_dict[st.session_state.selected_user_id]}"
+                            f"Shift on {new_shift_date.strftime('%d/%m/%Y')} created successfully for user {user_id_name_dict[st.session_state.selected_user_id]}"
                         )
                     except IntegrityError:
                         st.error(
-                            f"A shift for user {user_id_name_dict[st.session_state.selected_user_id]} on {new_shift_date} already exists."
+                            f"A shift for user {user_id_name_dict[st.session_state.selected_user_id]} on {new_shift_date.strftime('%d/%m/%Y')} already exists."
                         )
             session.rollback()  # Roll back the session to a clean state
 
@@ -90,7 +90,7 @@ if st.session_state.is_admin == True:
             options=[None] + list(shift_id_date_dict.keys()),
             format_func=lambda x: "Select shift"
             if x is None
-            else shift_id_date_dict[x].strftime("%a %m/%d/%y"),
+            else shift_id_date_dict[x].strftime("%a %d/%m/%y"),  # British date format
         )
 
         # Button to confirm shift selection and store it in session state
@@ -101,25 +101,26 @@ if st.session_state.is_admin == True:
     # Form to edit the selected shift
     if st.session_state.selected_shift_id:
         with SessionLocal() as session:
-            # shift_to_edit = session.query(Shift).get(st.session_state.selected_shift_id)
             shift_to_edit = session.get(Shift, st.session_state.selected_shift_id)
 
             st.info(
-                f"Editing Shift for {st.session_state.user_name} on {shift_to_edit.date}",
+                f"Editing Shift for {st.session_state.selected_user_name} on {shift_to_edit.date.strftime('%d/%m/%Y')}",  # British date format
                 icon="📅",
             )
 
             with st.form(f"shift_{shift_to_edit.shift_id}"):
-                date = st.date_input("Date", shift_to_edit.date, disabled=True)
+                # British date format applied to the date picker
+                date = st.date_input(
+                    "Date", shift_to_edit.date, format="DD/MM/YYYY", disabled=True
+                )
                 start_time = st.time_input(
                     "Start Time",
                     value=shift_to_edit.start_time,
                     step=timedelta(minutes=15),
                 )
                 end_time = st.time_input(
-                    "End Time", shift_to_edit.end_time, step=timedelta(minutes=15)
+                    "End Time", value=shift_to_edit.end_time, step=timedelta(minutes=15)
                 )
-
                 break_hours = (
                     int(shift_to_edit.total_break.total_seconds() // 3600)
                     if shift_to_edit.total_break
@@ -137,14 +138,14 @@ if st.session_state.is_admin == True:
                         "Total Break Hours",
                         min_value=0,
                         max_value=23,
-                        value=break_hours,  # Converts to int for the number_input
+                        value=break_hours,
                     )
                 with col2:
                     total_break_minutes = st.number_input(
                         "Total Break Minutes",
                         min_value=0,
                         max_value=59,
-                        value=break_minutes,  # Converts to int and gets the remainder of hours
+                        value=break_minutes,
                         step=1,
                     )
 
@@ -157,24 +158,15 @@ if st.session_state.is_admin == True:
                 )
 
                 if st.form_submit_button("Update Shift"):
-                    # You can adjust the timezone offset as needed, here using UTC/GMT
-                    # timezone_utc = timezone(timedelta(hours=0))
-
-                    # Combine date and time to create datetime objects with timezone information
                     start_datetime = (
                         datetime.combine(date, start_time) if start_time else None
                     )
                     end_datetime = (
                         datetime.combine(date, end_time) if end_time else None
                     )
-
-                    # Convert the break input hours and minutes to a timedelta
-                    # this will work with Interval in the model
                     total_break = timedelta(
                         hours=total_break_hours, minutes=total_break_minutes
                     )
-
-                    # shift_to_edit.date = date
                     shift_to_edit.start_time = start_datetime
                     shift_to_edit.end_time = end_datetime
                     shift_to_edit.total_break = total_break
