@@ -64,13 +64,14 @@ class Shift(Base):
     def total_time_worked(self):
         if self.status in ["working", "on break"]:
             current_time = datetime.utcnow()
-            return current_time - self.start_time
+            # Ensure start_time is not None before calculating the difference
+            if self.start_time is not None:
+                return current_time - self.start_time
         elif self.status == "finished working":
-            return (
-                self.end_time - self.start_time
-                if self.start_time and self.end_time
-                else None
-            )
+            # Check both start_time and end_time are not None before subtraction
+            if self.start_time is not None and self.end_time is not None:
+                return self.end_time - self.start_time
+        # If any of the times are None or if the status does not match, return None
         return None
 
     @hybrid_property

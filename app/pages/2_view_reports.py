@@ -1,5 +1,4 @@
 import streamlit as st
-
 import pandas as pd
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
@@ -12,14 +11,26 @@ init_app()
 
 st.title(":calendar: View Shift Reports")
 
+
+def get_start_end_dates():
+    date_input = st.date_input(
+        "Choose start and end dates",
+        [datetime.today(), datetime.today() + timedelta(days=6)],
+        format="DD/MM/YYYY",
+        # Removed the format parameter as it is not valid for st.date_input
+    )
+    # Check if the date_input is a tuple with two dates
+    if isinstance(date_input, tuple) and len(date_input) == 2:
+        return date_input
+    else:
+        # If not, it means the user only selected one date, so use it as both start and end date
+        return date_input, date_input
+
+
 if st.session_state.is_admin:
     with st.form(key="my_form"):
         # British date format applied to the date picker
-        start_date, end_date = st.date_input(
-            "Choose start and end dates",
-            (datetime.today(), datetime.today() + timedelta(days=6)),
-            format="DD/MM/YYYY",  # Modified to British date format
-        )
+        start_date, end_date = get_start_end_dates()
 
         # Dropdown to select a user
         with SessionLocal() as session:
@@ -36,7 +47,7 @@ if st.session_state.is_admin:
         # Every form must have a submit button.
         submitted = st.form_submit_button("Submit")
 
-        if submitted:
+        if submitted and start_date and end_date:
             with SessionLocal() as db_session:
                 query = db_session.query(Shift).filter(
                     Shift.date >= start_date, Shift.date <= end_date
@@ -53,20 +64,43 @@ if st.session_state.is_admin:
                     shifts_data = []
                     total_payable_hours = timedelta()
                     for shift in shifts_in_week:
-                        total_payable_hours += shift.payable_hours
+                        # Check for null values and use default if necessary
+                        user_name = shift.user.name if shift.user else "Unknown"
+                        start_time = (
+                            shift.start_time.strftime("%H:%M")
+                            if shift.start_time
+                            else "N/A"
+                        )
+                        end_time = (
+                            shift.end_time.strftime("%H:%M")
+                            if shift.end_time
+                            else "N/A"
+                        )
+                        status = shift.status if shift.status else "N/A"
+                        total_time_worked = (
+                            shift.total_time_worked
+                            if shift.total_time_worked
+                            else timedelta()
+                        )
+                        total_break = (
+                            shift.total_break if shift.total_break else timedelta()
+                        )
+                        payable_hours = (
+                            shift.payable_hours if shift.payable_hours else timedelta()
+                        )
+
+                        total_payable_hours += payable_hours
+
                         shifts_data.append(
                             {
-                                "User": shift.user.name,
-                                # Date formatted to British date style
+                                "User": user_name,
                                 "Date": shift.date.strftime("%d/%m/%Y"),
-                                "Start": shift.start_time.strftime("%H:%M"),
-                                "End": shift.end_time.strftime("%H:%M"),
-                                "Status": shift.status,
-                                "Total Time:": format_timedelta(
-                                    shift.total_time_worked
-                                ),
-                                "Break": format_timedelta(shift.total_break),
-                                "Payable Hours": format_timedelta(shift.payable_hours),
+                                "Start": start_time,
+                                "End": end_time,
+                                "Status": status,
+                                "Total Time": format_timedelta(total_time_worked),
+                                "Break": format_timedelta(total_break),
+                                "Payable Hours": format_timedelta(payable_hours),
                             }
                         )
 
